@@ -17,7 +17,7 @@ public abstract class BaseDomain {
 
     // @AutoPopulated gerará automaticamente um UUID ao persistir
     @AutoPopulated(updatable = false)
-    private String uuid;
+    private UUID uuid;
 
     // @DateCreated cuidará automaticamente da data de criação
     @DateCreated
@@ -26,7 +26,7 @@ public abstract class BaseDomain {
     @PrePersist
     public void prePersist() {
         if (this.uuid == null) {
-            this.uuid = UUID.randomUUID().toString();
+            this.uuid = UUID.randomUUID();
         }
         // Com @DateCreated, o Micronaut Data gerencia automaticamente o createdAt
     }
@@ -64,11 +64,7 @@ public abstract class BaseDomain {
         this.createdAt = createdAt;
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 }

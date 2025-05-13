@@ -1,0 +1,9 @@
+CREATE TABLE Autor(
+    id BIGSERIAL PRIMARY KEY NOT NULL,
+    uuid UUID NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    descricao VARCHAR(400) NOT NULL
+    );
+

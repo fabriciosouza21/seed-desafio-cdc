@@ -1,0 +1,10 @@
+@startuml
+
+class Autor {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-string nome
+	-string email
+	-string descricao
+}
