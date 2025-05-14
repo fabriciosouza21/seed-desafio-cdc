@@ -15,3 +15,21 @@ class Categoria {
 	-LocalDateTime createdAt
 	-string nome
 }
+
+class Livro {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-string titulo
+	-string resumo
+	-string sumario
+	-double preco
+	-string isbn
+	-int numeroPaginas
+	-LocalDateTime dataPublicacao
+}
+
+Livro *-- Categoria
+Livro *-- Autor
+
+@enduml

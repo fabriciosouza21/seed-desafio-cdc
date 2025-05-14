@@ -11,6 +11,8 @@ import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import jakarta.inject.Singleton;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 
@@ -18,6 +20,8 @@ import java.time.Instant;
 @Requires(classes = {ServiceError.class, ExceptionHandler.class})
 @Produces
 public class ServiceExceptionHandler implements ExceptionHandler<ServiceError, HttpResponse<StandardError>>{
+
+    private final static Logger logger = LoggerFactory.getLogger(ServiceExceptionHandler.class);
 
     @Override
     public HttpResponse<StandardError> handle(HttpRequest request, ServiceError exception) {

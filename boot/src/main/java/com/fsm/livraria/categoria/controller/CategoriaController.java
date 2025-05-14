@@ -34,7 +34,7 @@ public class CategoriaController {
         LOG.info("Criando categoria {}", request.name());
         Categoria categoria = request.toEntity();
         Categoria categoriaSaved = categoriaRepository.save(categoria);
-        URI uri = UriBuilder.of(CATEGORIA_CREATED).path(String.valueOf(categoriaSaved.getId())).build();
+        URI uri = UriBuilder.of(CATEGORIA_CREATED).path(categoriaSaved.getUuid().toString()).build();
         LOG.info("Categoria criada {}", categoriaSaved);
         return HttpResponse.created(uri);
     }
