@@ -1,10 +1,8 @@
-package com.fsm.livraria.controller;
+package com.fsm.livraria.autor.controller;
 
 import com.fsm.exceptions.exception.FieldMessage;
 import com.fsm.exceptions.exception.ValidateError;
-import com.fsm.livraria.dto.AutorCreatedRequest;
-import com.fsm.livraria.entities.Autor;
-import com.fsm.livraria.repositories.AutorRepository;
+import com.fsm.livraria.autor.dto.AutorCreatedRequest;
 import com.fsm.utils.AutenticationUtils;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;

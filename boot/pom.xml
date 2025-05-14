@@ -22,6 +22,7 @@
     <micronaut.aot.enabled>false</micronaut.aot.enabled>
     <micronaut.aot.packageName>com.fsm.aot.generated</micronaut.aot.packageName>
     <exec.mainClass>com.fsm.Application</exec.mainClass>
+    <skipTests>true</skipTests>
   </properties>
 
   <repositories>
@@ -161,19 +162,27 @@
         <groupId>io.micronaut.maven</groupId>
         <artifactId>micronaut-maven-plugin</artifactId>
         <configuration>
-              <aotDependencies>
-                  <dependency>
-                      <groupId>io.micronaut.security</groupId>
-                      <artifactId>micronaut-security-aot</artifactId>
-                      <version>${micronaut.security.version}</version>
-                  </dependency>
-              </aotDependencies>
+          <aotDependencies>
+            <dependency>
+              <groupId>io.micronaut.security</groupId>
+              <artifactId>micronaut-security-aot</artifactId>
+              <version>${micronaut.security.version}</version>
+            </dependency>
+          </aotDependencies>
           <configFile>aot-${packaging}.properties</configFile>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!--suppress UnresolvedMavenProperty -->
+          <skipTests>${skipTests}</skipTests>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

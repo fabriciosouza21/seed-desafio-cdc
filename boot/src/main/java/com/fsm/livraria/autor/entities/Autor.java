@@ -1,8 +1,8 @@
-package com.fsm.livraria.entities;
+package com.fsm.livraria.autor.entities;
 
 import com.fsm.base.model.BaseDomain;
 import com.fsm.exceptions.exception.ServiceError;
-import com.fsm.livraria.validation.UniqueEmail;
+import com.fsm.livraria.autor.validation.AutorUniqueEmail;
 import io.micronaut.data.annotation.MappedEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,7 +26,7 @@ public class Autor extends BaseDomain {
     public Autor() {
     }
 
-    public Autor(@NotBlank String nome, @NotBlank @Email @UniqueEmail String email, @NotBlank @Size(max = 400) String descricao) {
+    public Autor(@NotBlank String nome, @NotBlank @Email @AutorUniqueEmail String email, @NotBlank @Size(max = 400) String descricao) {
         if(nome == null || nome.isBlank()) {
             throw new ServiceError("Nome não pode ser nulo ou vazio");
         }

@@ -1,16 +1,16 @@
-package com.fsm.livraria.validation;
+package com.fsm.livraria.autor.validation;
 
-import com.fsm.livraria.repositories.AutorRepository;
+import com.fsm.livraria.autor.repositories.AutorRepository;
 import jakarta.inject.Singleton;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 @Singleton
-public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
+public class AutorUniqueEmailValidator implements ConstraintValidator<AutorUniqueEmail, String> {
 
     private final AutorRepository autorRepository;
 
-    public UniqueEmailValidator(AutorRepository autorRepository) {
+    public AutorUniqueEmailValidator(AutorRepository autorRepository) {
         this.autorRepository = autorRepository;
     }
 

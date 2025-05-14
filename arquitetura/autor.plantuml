@@ -8,3 +8,10 @@ class Autor {
 	-string email
 	-string descricao
 }
+
+class Categoria {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-string nome
+}

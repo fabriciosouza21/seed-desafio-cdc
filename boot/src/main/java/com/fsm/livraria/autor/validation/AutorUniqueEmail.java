@@ -1,4 +1,4 @@
-package com.fsm.livraria.validation;
+package com.fsm.livraria.autor.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -9,10 +9,10 @@ import java.lang.annotation.*;
  * */
 
 @Documented
-@Constraint(validatedBy = UniqueEmailValidator.class)
+@Constraint(validatedBy = AutorUniqueEmailValidator.class)
 @Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UniqueEmail {
+public @interface AutorUniqueEmail {
     String message() default "E-mail já está em uso";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

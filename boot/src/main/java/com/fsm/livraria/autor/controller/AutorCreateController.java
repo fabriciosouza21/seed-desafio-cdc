@@ -1,9 +1,9 @@
-package com.fsm.livraria.controller;
+package com.fsm.livraria.autor.controller;
 
 
-import com.fsm.livraria.dto.AutorCreatedRequest;
-import com.fsm.livraria.entities.Autor;
-import com.fsm.livraria.repositories.AutorRepository;
+import com.fsm.livraria.autor.dto.AutorCreatedRequest;
+import com.fsm.livraria.autor.entities.Autor;
+import com.fsm.livraria.autor.repositories.AutorRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
