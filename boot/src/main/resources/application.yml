@@ -15,6 +15,14 @@ micronaut:
             secret: ${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}
           access-token:
             expiration:  ${JWT_GENERATOR_ACCESS_TOKEN_EXPIRATION:PT24H}
+  data:
+    pageable:
+      default-page: 0
+      default-size: 10
+      max-page-size: 100
+      sort:
+        default-order: asc
+        default-property: titulo
 datasources:
   default:
     driver-class-name: org.postgresql.Driver
