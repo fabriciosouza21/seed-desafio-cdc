@@ -28,10 +28,7 @@ public class Categoria extends BaseDomain {
         return nome;
     }
 
-    @Override
-    public String toString() {
-        return "Categoria{" +
-                "nome='" + nome + '\'' +
-                '}';
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }

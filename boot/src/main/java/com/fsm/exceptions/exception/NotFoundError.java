@@ -5,6 +5,13 @@ public class NotFoundError extends RuntimeException{
     private final String message;
     private final int status;
 
+
+    public NotFoundError(String message) {
+        super(message);
+        this.message = message;
+        this.status = 404;
+    }
+
     public NotFoundError(String message, int status) {
         super(message);
         this.message = message;

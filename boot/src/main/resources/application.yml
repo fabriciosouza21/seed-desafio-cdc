@@ -14,23 +14,16 @@ micronaut:
             enabled: true
             secret: ${JWT_GENERATOR_SIGNATURE_SECRET:pleaseChangeThisSecretForANewOne}
           access-token:
-            expiration:  ${JWT_GENERATOR_ACCESS_TOKEN_EXPIRATION:PT24H}
-  data:
-    pageable:
-      default-page: 0
-      default-size: 10
-      max-page-size: 100
-      sort:
-        default-order: asc
-        default-property: titulo
+            expiration: ${JWT_GENERATOR_ACCESS_TOKEN_EXPIRATION:PT24H}
+
 datasources:
   default:
     driver-class-name: org.postgresql.Driver
     db-type: postgres
     dialect: POSTGRES
     url: ${DB_URL:`jdbc:postgresql://localhost:5439/fsm`}
-    password: ${DB_PASSWORD:fsm}
     username: ${DB_USERNAME:fsm}
+    password: ${DB_PASSWORD:fsm}
 
 flyway:
   datasources:
