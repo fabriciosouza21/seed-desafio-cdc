@@ -11,6 +11,7 @@ import io.micronaut.data.model.Pageable;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,4 +45,5 @@ public interface LivroRepository extends CrudRepository<Livro, Long > {
         );
     }
 
+    List<Livro> findByUuidInList(List<UUID> livroIds);
 }

@@ -67,6 +67,24 @@ class Compra {
 Compra *-- Pais
 Compra *-- Estado
 
+class carrinho {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-BigDecimal total
+}
+
+class ItemCarrinho {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-int quantidade
+}
+
+carrinho *-- ItemCarrinho
+
+ItemCarrinho *-- Livro
+
 
 
 

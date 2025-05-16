@@ -45,7 +45,7 @@ public class EstadoUtils {
         long count = estadoRepository.count();
         if(count == 0) {
 
-            String token = new AutenticationUtils(spec).getToken();
+            String token = autenticationUtils.getToken();
 
             String name = "name" + System.currentTimeMillis();
             String uf = UUID.randomUUID().toString().substring(0, 2);
