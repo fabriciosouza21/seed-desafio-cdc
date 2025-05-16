@@ -32,24 +32,24 @@ public class PaisUtils {
         this.autenticationUtils = autenticationUtils;
     }
 
-    public UUID getPais(){
+    public UUID getPais() {
 
         if (paisId != null) {
             return paisId;
         }
 
         long count = paisRepository.count();
-        if(count == 0) {
+        if (count == 0) {
 
             paisId = criarPais();
 
-        }else {
+        } else {
             Pageable pageable = Pageable.from(0, 1);
             List<Pais> paises = paisRepository.findAll(pageable);
 
-            if(!paises.isEmpty()) {
+            if (!paises.isEmpty()) {
                 paisId = paises.getFirst().getUuid();
-            }else {
+            } else {
                 throw new NotFoundError("categoria não encontrado");
             }
         }
@@ -96,17 +96,7 @@ public class PaisUtils {
             return paisId;
         }
 
-        long count = paisRepository.count();
-        if(count <= 1) {
-            return  criarPais();
-        } else {
-            //buscar no banco de dados um pais que não seja o mesmo do uuid
-            Pageable pageable = Pageable.from(0, 1);
-            List<Pais> paises = paisRepository.findAllExcept(uuid, pageable);
-            if(!paises.isEmpty()) {
-                return paises.getFirst().getUuid();
-            }
-        }
-        throw new NotFoundError("categoria não encontrado");
+        return criarPais();
+
     }
 }

@@ -46,4 +46,6 @@ public class Carrinho extends BaseDomain {
     public void setItens(List<CarrinhoItem> itens) {
         this.itens = itens;
     }
+    
+
 }

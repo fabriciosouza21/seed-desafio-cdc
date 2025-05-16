@@ -1,7 +1,10 @@
 package com.fsm.livraria.compra.controller;
 
+import com.fsm.livraria.carrinho.repositories.CarrinhoRepository;
 import com.fsm.livraria.compra.dto.CompraCreateResquest;
 import com.fsm.livraria.compra.entities.Compra;
+import com.fsm.livraria.compra.entities.CompraPedido;
+import com.fsm.livraria.compra.repositories.CompraPedidoRepository;
 import com.fsm.livraria.compra.repositories.CompraRepository;
 import com.fsm.livraria.estado.repositories.EstadoRepository;
 import io.micronaut.http.HttpResponse;
@@ -22,15 +25,24 @@ public class CompraCriacaoController {
 
     private final EstadoRepository estadoRepository;
 
-    public CompraCriacaoController(CompraRepository compraRepository, EstadoRepository estadoRepository) {
+    private final CarrinhoRepository carrinhoRepository;
+
+    private final CompraPedidoRepository compraPedidoRepository;
+
+    public CompraCriacaoController(CompraRepository compraRepository, EstadoRepository estadoRepository, CarrinhoRepository carrinhoRepository, CompraPedidoRepository compraPedidoRepository) {
         this.compraRepository = compraRepository;
         this.estadoRepository = estadoRepository;
+        this.carrinhoRepository = carrinhoRepository;
+        this.compraPedidoRepository = compraPedidoRepository;
     }
 
     @Post
     HttpResponse<Void> create(@Body @Valid CompraCreateResquest compraCriacaoRequest) {
         Compra compraNew = compraCriacaoRequest.toEntity(estadoRepository);
         Compra compraSaved = compraRepository.save(compraNew);
+
+        CompraPedido compraPedidoNew = compraCriacaoRequest.toCompraPedido(carrinhoRepository, compraSaved);
+        compraPedidoRepository.save(compraPedidoNew);
 
         UriBuilder uri = UriBuilder.of(COMPRA_CRIACAO).path(compraSaved.getUuid().toString());
         return HttpResponse.created(uri.build());

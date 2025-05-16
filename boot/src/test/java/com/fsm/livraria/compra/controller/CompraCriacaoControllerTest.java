@@ -4,6 +4,7 @@ import com.fsm.exceptions.exception.ValidateError;
 import com.fsm.livraria.compra.dto.CompraCreateResquest;
 import com.fsm.livraria.estado.entities.Estado;
 import com.fsm.utils.AutenticationUtils;
+import com.fsm.utils.CarrinhoUtils;
 import com.fsm.utils.EstadoUtils;
 import com.fsm.utils.PaisUtils;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -26,6 +27,9 @@ public class CompraCriacaoControllerTest {
     @Inject
     private AutenticationUtils autenticationUtils;
 
+    @Inject
+    private CarrinhoUtils carrinhoUtils;
+
     @Test
     void compraCriacaoTest(RequestSpecification spec, EstadoUtils estadoUtils) {
         String token = autenticationUtils.getToken();
@@ -46,7 +50,7 @@ public class CompraCriacaoControllerTest {
 
         CompraCreateResquest compraRequest = criarCompraRequest(
                 email, nome, sobrenome, documento, endereco, complemento,
-                cidade, telefone, cep, estado.getUuid().toString(), estado.getPais().getUuid().toString()
+                cidade, telefone, cep, estado.getUuid().toString(), estado.getPais().getUuid().toString(),carrinhoUtils.getCarrinho().toString()
         );
 
         // Testa a criação de compra com sucesso
@@ -67,7 +71,7 @@ public class CompraCriacaoControllerTest {
         // Campos inválidos (nulos)
         CompraCreateResquest compraRequest = criarCompraRequest(
                 null, null, null, null, null, null,
-                null, null, null, null, null
+                null, null, null, null, null, null
         );
 
         ValidateError validateError = spec.given()
@@ -112,7 +116,7 @@ public class CompraCriacaoControllerTest {
 
         CompraCreateResquest compraRequest = criarCompraRequest(
                 invalidEmail, "Nome", "Sobrenome", "12345678909", "Endereço", "Complemento",
-                "Cidade", "Telefone", "12345-678", estado.getUuid().toString(), estado.getPais().getUuid().toString()
+                "Cidade", "Telefone", "12345-678", estado.getUuid().toString(), estado.getPais().getUuid().toString(), carrinhoUtils.getCarrinho().toString()
         );
 
         ValidateError validateError = spec.given()
@@ -142,7 +146,7 @@ public class CompraCriacaoControllerTest {
 
         CompraCreateResquest compraRequest = criarCompraRequest(
                 "email@teste.com", "Nome", "Sobrenome", invalidDocumento, "Endereço", "Complemento",
-                "Cidade", "Telefone", "12345-678", estado.getUuid().toString(), estado.getPais().getUuid().toString()
+                "Cidade", "Telefone", "12345-678", estado.getUuid().toString(), estado.getPais().getUuid().toString(), carrinhoUtils.getCarrinho().toString()
         );
 
         ValidateError validateError = spec.given()
@@ -170,7 +174,7 @@ public class CompraCriacaoControllerTest {
 
         CompraCreateResquest compraRequest = criarCompraRequest(
                 "email@teste.com", "Nome", "Sobrenome", "12345678909", "Endereço", "Complemento",
-                "Cidade", "Telefone", "12345-678", estado.getUuid().toString(), paisInexistente.toString()
+                "Cidade", "Telefone", "12345-678", estado.getUuid().toString(), paisInexistente.toString(), carrinhoUtils.getCarrinho().toString()
         );
 
         ValidateError validateError = spec.given()
@@ -201,7 +205,7 @@ public class CompraCriacaoControllerTest {
 
         CompraCreateResquest compraRequest = criarCompraRequest(
                 "email@teste.com", "Nome", "Sobrenome", "12345678909", "Endereço", "Complemento",
-                "Cidade", "Telefone", "12345-678", estado.getUuid().toString(), pais.toString()
+                "Cidade", "Telefone", "12345-678", estado.getUuid().toString(), pais.toString(), UUID.randomUUID().toString()
         );
 
         ValidateError validateError = spec.given()
@@ -224,7 +228,7 @@ public class CompraCriacaoControllerTest {
     private CompraCreateResquest criarCompraRequest(
             String email, String nome, String sobrenome, String documento,
             String endereco, String complemento, String cidade, String telefone,
-            String cep, String estadoId, String paisId) {
+            String cep, String estadoId, String paisId, String carrinhoId) {
 
         CompraCreateResquest request = new CompraCreateResquest();
         request.setEmail(email);
@@ -238,6 +242,7 @@ public class CompraCriacaoControllerTest {
         request.setCep(cep);
         request.setEstadoId(estadoId);
         request.setPaisId(paisId);
+        request.setCarrinhoId(carrinhoId);
 
         return request;
     }

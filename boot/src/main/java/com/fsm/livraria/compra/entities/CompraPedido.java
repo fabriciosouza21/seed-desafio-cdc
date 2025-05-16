@@ -1,19 +1,20 @@
-package com.fsm.base.model;
+package com.fsm.livraria.compra.entities;
 
 import io.micronaut.data.annotation.AutoPopulated;
 import io.micronaut.data.annotation.DateCreated;
-import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
+import io.micronaut.data.annotation.EmbeddedId;
+import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.event.PrePersist;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-public abstract class BaseDomain {
+@MappedEntity
+public class CompraPedido  {
 
-    @Id
-    @GeneratedValue(GeneratedValue.Type.AUTO)
-    private Long id;
+    @EmbeddedId
+    private CompraPedidoId compraPedidoId;
 
     // @AutoPopulated gerará automaticamente um UUID ao persistir
     @AutoPopulated(updatable = false)
@@ -23,6 +24,21 @@ public abstract class BaseDomain {
     @DateCreated
     private LocalDateTime createdAt;
 
+    public CompraPedido() {
+    }
+
+    public CompraPedido(CompraPedidoId compraPedidoId) {
+        this.compraPedidoId = compraPedidoId;
+    }
+
+    public CompraPedidoId getCompraPedidoId() {
+        return compraPedidoId;
+    }
+
+    public void setCompraPedidoId(CompraPedidoId compraPedidoId) {
+        this.compraPedidoId = compraPedidoId;
+    }
+
     @PrePersist
     public void prePersist() {
         if (this.uuid == null) {
@@ -31,28 +47,17 @@ public abstract class BaseDomain {
         // Com @DateCreated, o Micronaut Data gerencia automaticamente o createdAt
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return (obj == this) ||
-                (obj instanceof BaseDomain && obj.getClass().equals(getClass()) && getId() == ((BaseDomain) obj).getId());
-    }
 
     @Override
-    public String toString() {
-        return getClass().getName() + ":" + getId();
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CompraPedido that = (CompraPedido) o;
+        return Objects.equals(compraPedidoId, that.compraPedidoId);
     }
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        return Objects.hashCode(compraPedidoId);
     }
 
     public LocalDateTime getCreatedAt() {

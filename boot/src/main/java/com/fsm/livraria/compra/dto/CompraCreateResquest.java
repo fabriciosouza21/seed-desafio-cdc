@@ -3,7 +3,11 @@ package com.fsm.livraria.compra.dto;
 import com.fsm.base.validation.AtributosBasicos;
 import com.fsm.base.validation.RelacionamentoCampos;
 import com.fsm.exceptions.exception.ServiceError;
+import com.fsm.livraria.carrinho.entities.Carrinho;
+import com.fsm.livraria.carrinho.repositories.CarrinhoRepository;
 import com.fsm.livraria.compra.entities.Compra;
+import com.fsm.livraria.compra.entities.CompraPedido;
+import com.fsm.livraria.compra.entities.CompraPedidoId;
 import com.fsm.livraria.compra.validation.documento.CpfOrCnpj;
 import com.fsm.livraria.compra.validation.documento.EstadoPaisExist;
 import com.fsm.livraria.estado.entities.Estado;
@@ -65,6 +69,9 @@ public class CompraCreateResquest {
     @NotBlank(message = "O país não pode ser vazio", groups = AtributosBasicos.class)
     @PaisExist(groups = AtributosBasicos.class)
     private String paisId;
+
+    @NotBlank(message = "O carrinho não pode ser vazio", groups = AtributosBasicos.class)
+    private String carrinhoId;
 
 
     public String getEmail() {
@@ -158,6 +165,7 @@ public class CompraCreateResquest {
     public Compra toEntity(EstadoRepository estadoRepository) {
 
         Estado estado = estadoRepository.findByUuid(UUID.fromString(estadoId)).orElseThrow(() -> new ServiceError("Estado não encontrado com o ID fornecido"));
+
         return new Compra(
                 this.email,
                 this.nome,
@@ -171,5 +179,20 @@ public class CompraCreateResquest {
                 estado,
                 estado.getPais()
         );
+    }
+
+    public String getCarrinhoId() {
+        return carrinhoId;
+    }
+
+    public void setCarrinhoId(String carrinhoId) {
+        this.carrinhoId = carrinhoId;
+    }
+
+    public CompraPedido toCompraPedido(CarrinhoRepository carrinhoRepository, Compra compra) {
+        Carrinho carrinho = carrinhoRepository.findByUuid(UUID.fromString(this.carrinhoId))
+                .orElseThrow(() -> new ServiceError("Carrinho não encontrado com o ID fornecido"));
+
+        return new CompraPedido(new CompraPedidoId(compra,carrinho ));
     }
 }

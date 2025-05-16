@@ -23,10 +23,13 @@ public class CarrinhoCreateController {
 
     private final CarrinhoRepository carrinhoRepository;
 
+    private final CarrinhoItemRepository carrinhoItemRepository;
+
     private final LivroRepository livroRepository;
 
-    public CarrinhoCreateController(CarrinhoRepository carrinhoRepository, CarrinhoItemRepository carrinhoItemRepository, LivroRepository livroRepository) {
+    public CarrinhoCreateController(CarrinhoRepository carrinhoRepository, CarrinhoItemRepository carrinhoItemRepository, CarrinhoItemRepository carrinhoItemRepository1, LivroRepository livroRepository) {
         this.carrinhoRepository = carrinhoRepository;
+        this.carrinhoItemRepository = carrinhoItemRepository1;
         this.livroRepository = livroRepository;
     }
 
@@ -37,7 +40,7 @@ public class CarrinhoCreateController {
         //criar o carrinho
         Carrinho carrinhoNovo = carrinhoCriacaoRequest.toEntity(livroRepository);
         Carrinho carrinhoSaved = carrinhoRepository.save(carrinhoNovo);
-
+        carrinhoItemRepository.saveAll(carrinhoSaved.getItens());
         URI uri = UriBuilder.of(CARRINHO_CRIACAO).path(carrinhoSaved.getUuid().toString()).build();
 
         return HttpResponse.created(uri);
