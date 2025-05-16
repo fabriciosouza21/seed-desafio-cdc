@@ -15,6 +15,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -30,10 +31,13 @@ public class LivroDetailControllerTest {
 
     UUID livroId;
 
+    @Inject
+    AutenticationUtils autenticationUtils;
+
     @Test
     void testDetail(RequestSpecification spec,LivroRepository livroRepository , AutorUtils autorUtils, CategoriaUtils categoriaUtils) {
         UUID livro = getLivro(spec,livroRepository,autorUtils, categoriaUtils);
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         LivroDetail livroDetail = spec.given()
                 .contentType(ContentType.JSON)
@@ -67,7 +71,7 @@ public class LivroDetailControllerTest {
 
     @Test
     void testDetailNotFound(RequestSpecification spec) {
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String livroUuid = UUID.randomUUID().toString();
         Response response = spec.given()
@@ -113,7 +117,7 @@ public class LivroDetailControllerTest {
                     categoria.toString()
             );
 
-            String token = new AutenticationUtils(spec).getToken();
+            String token = autenticationUtils.getToken();
 
             Response post = spec.given()
                     .contentType(ContentType.JSON)

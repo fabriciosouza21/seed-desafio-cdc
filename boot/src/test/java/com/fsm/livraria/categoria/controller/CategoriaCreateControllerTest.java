@@ -7,6 +7,7 @@ import com.fsm.utils.AutenticationUtils;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import jakarta.inject.Inject;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,10 +17,13 @@ import java.util.List;
 @MicronautTest
 public class CategoriaCreateControllerTest {
 
+    @Inject
+    AutenticationUtils autenticationUtils;
+
     @Test
     void testCreateAutor(RequestSpecification spec) {
 
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = "testUser" + System.currentTimeMillis();
 
@@ -36,7 +40,7 @@ public class CategoriaCreateControllerTest {
     @Test
     void testErrorValidation(RequestSpecification spec) {
 
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = null;
 
@@ -53,7 +57,7 @@ public class CategoriaCreateControllerTest {
     @Test
     void testErrorNameValidation(RequestSpecification spec) {
 
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = "testUser" + System.currentTimeMillis();
 

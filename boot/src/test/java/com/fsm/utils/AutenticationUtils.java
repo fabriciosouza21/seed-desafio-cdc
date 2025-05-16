@@ -11,7 +11,6 @@ public class AutenticationUtils {
 
     private final RequestSpecification spec;
 
-
     public AutenticationUtils(RequestSpecification spec) {
         this.spec = spec;
     }

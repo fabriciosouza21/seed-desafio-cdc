@@ -8,6 +8,7 @@ import com.fsm.utils.PaisUtils;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import jakarta.inject.Inject;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 
@@ -21,10 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MicronautTest
 public class EstadoCreateControllerTest {
 
+    @Inject private AutenticationUtils autenticationUtils;
+
     @Test
     void EstadoCreateTest(RequestSpecification spec, PaisUtils paisUtils) {
 
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = "name" + System.currentTimeMillis();
         String uf = UUID.randomUUID().toString().substring(0, 2);
@@ -45,7 +48,7 @@ public class EstadoCreateControllerTest {
 
     @Test
     void testErrorValidation(RequestSpecification spec) {
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Campos inválidos
         String name = null;
@@ -75,7 +78,7 @@ public class EstadoCreateControllerTest {
 
     @Test
     void testErrorUfSizeValidation(RequestSpecification spec, PaisUtils paisUtils) {
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = "Estado " + System.currentTimeMillis();
         String uf = "ABC"; // UF com mais de 2 caracteres
@@ -103,7 +106,7 @@ public class EstadoCreateControllerTest {
 
     @Test
     void testErrorNameUniqueValidation(RequestSpecification spec, PaisUtils paisUtils) {
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = "Estado" + System.currentTimeMillis();
         String uf = UUID.randomUUID().toString().substring(0, 2);
@@ -142,7 +145,7 @@ public class EstadoCreateControllerTest {
 
     @Test
     void testErrorPaisExistValidation(RequestSpecification spec) {
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = "Estado" + System.currentTimeMillis();
         String uf = UUID.randomUUID().toString().substring(0, 2);

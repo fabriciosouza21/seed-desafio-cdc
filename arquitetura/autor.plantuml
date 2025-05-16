@@ -32,4 +32,42 @@ class Livro {
 Livro *-- Categoria
 Livro *-- Autor
 
+class Pais {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-string nome
+	-string uf
+}
+
+class Estado {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-string nome
+	-string uf
+}
+
+Estado *-- Pais
+
+class Compra {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-string email
+	-string nome
+	-string documento
+	-string endereco
+	-string complemento
+	-string cidade
+	-string telefone
+	-string cep
+}
+
+Compra *-- Pais
+Compra *-- Estado
+
+
+
+
 @enduml

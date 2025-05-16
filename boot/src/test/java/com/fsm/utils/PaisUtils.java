@@ -41,24 +41,7 @@ public class PaisUtils {
         long count = paisRepository.count();
         if(count == 0) {
 
-            String name = "name" + System.currentTimeMillis();
-            String uf = UUID.randomUUID().toString().substring(0, 2);
-
-            PaisCreated paisCreated = new PaisCreated(name, uf);
-
-            String token = autenticationUtils.getToken();
-
-            Response post = spec.given().contentType(ContentType.JSON).header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                    .body(paisCreated)
-                    .when()
-                    .post(PaisCreateController.CREATE_PAISES);
-
-
-            post
-                    .then()
-                    .statusCode(201);
-
-            paisId = extrairId(post);
+            paisId = criarPais();
 
         }else {
             Pageable pageable = Pageable.from(0, 1);
@@ -73,6 +56,28 @@ public class PaisUtils {
         return paisId;
     }
 
+    private UUID criarPais() {
+        String name = "name" + System.currentTimeMillis();
+        String uf = UUID.randomUUID().toString().substring(0, 2);
+
+        PaisCreated paisCreated = new PaisCreated(name, uf);
+
+        String token = autenticationUtils.getToken();
+
+        Response post = spec.given().contentType(ContentType.JSON).header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(paisCreated)
+                .when()
+                .post(PaisCreateController.CREATE_PAISES);
+
+
+        post
+                .then()
+                .statusCode(201);
+
+
+        return extrairId(post);
+    }
+
     private UUID extrairId(Response response) {
 
         String locationHeader = response.then()
@@ -82,5 +87,26 @@ public class PaisUtils {
         String[] parts = locationHeader.split("/");
 
         return UUID.fromString(parts[parts.length - 1]);
+    }
+
+    public UUID getPaisExceto(UUID uuid) {
+
+        //verificar se o o uuid do pais é igual ao uuid do pais que foi criado
+        if (paisId != null && paisId.equals(uuid)) {
+            return paisId;
+        }
+
+        long count = paisRepository.count();
+        if(count <= 1) {
+            return  criarPais();
+        } else {
+            //buscar no banco de dados um pais que não seja o mesmo do uuid
+            Pageable pageable = Pageable.from(0, 1);
+            List<Pais> paises = paisRepository.findAllExcept(uuid, pageable);
+            if(!paises.isEmpty()) {
+                return paises.getFirst().getUuid();
+            }
+        }
+        throw new NotFoundError("categoria não encontrado");
     }
 }

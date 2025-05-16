@@ -17,9 +17,9 @@ import java.util.List;
 public class AutorCreateControllerTest {
 
     @Test
-    void testCreateAutor(RequestSpecification spec) {
+    void testCreateAutor(RequestSpecification spec, AutenticationUtils autenticationUtils) {
 
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = "testUser" + System.currentTimeMillis();
         String email = "testUser" + System.currentTimeMillis() + "@gmail.com";
@@ -36,9 +36,9 @@ public class AutorCreateControllerTest {
     }
 
     @Test
-    void testErrorValidation(RequestSpecification spec) {
+    void testErrorValidation(RequestSpecification spec, AutenticationUtils autenticationUtils) {
 
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = null;
         String email = null;
@@ -54,9 +54,9 @@ public class AutorCreateControllerTest {
     }
 
     @Test
-    void testErrorEmailValidation(RequestSpecification spec) {
+    void testErrorEmailValidation(RequestSpecification spec, AutenticationUtils autenticationUtils) {
 
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         String name = "testUser" + System.currentTimeMillis();
         String email = "testUser" + System.currentTimeMillis() + "@gmail.com";

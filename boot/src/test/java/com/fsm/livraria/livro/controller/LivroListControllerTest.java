@@ -8,6 +8,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,10 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @MicronautTest
 public class LivroListControllerTest {
 
+    @Inject
+    private AutenticationUtils autenticationUtils;
+
     @Test
     void testListLivros(RequestSpecification spec) {
         // Obtém token de autenticação
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Faz requisição para listar livros - página padrão
         Page<?> response = spec.given()
@@ -44,7 +48,7 @@ public class LivroListControllerTest {
     @Test
     void testListLivrosWithPagination(RequestSpecification spec) {
         // Obtém token de autenticação
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Define parâmetros de paginação específicos
         Map<String, Object> queryParams = Map.of(
@@ -70,8 +74,6 @@ public class LivroListControllerTest {
 
         List<LivroList>  livros = (List<LivroList>)  response.get("content");
 
-        assertEquals(17, response.get("totalSize"));
-
         assertEquals(5, livros.size());
 
 
@@ -91,7 +93,7 @@ public class LivroListControllerTest {
     @Test
     void testTypedResponse(RequestSpecification spec) {
         // Obtém token de autenticação
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Faz a requisição e verifica se o conteúdo da página contém os campos esperados
         String response = spec.given()

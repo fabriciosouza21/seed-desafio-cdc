@@ -13,6 +13,7 @@ import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Assertions;
@@ -30,10 +31,13 @@ public class LivroCreateControllerTest {
 
     private UUID categoriaGlobal;
 
+    @Inject
+    private AutenticationUtils autenticationUtils;
+
     @Test
     void testCreateLivroSuccess(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria
         UUID getCategoryId = createCategory(spec, token);
@@ -57,7 +61,7 @@ public class LivroCreateControllerTest {
     @Test
     void testEmptygetTitleValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -95,7 +99,7 @@ public class LivroCreateControllerTest {
     @Test
     void testUniquegetTitleValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -135,7 +139,7 @@ public class LivroCreateControllerTest {
     @Test
     void testEmptygetResumeValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -173,7 +177,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetResumeMaxLengthValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -214,7 +218,7 @@ public class LivroCreateControllerTest {
     @Test
     void testEmptygetIsbnValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -252,7 +256,7 @@ public class LivroCreateControllerTest {
     @Test
     void testUniquegetIsbnValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -304,7 +308,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetNumberPagesMinValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -342,7 +346,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetNumberPagesNullValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -380,7 +384,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetPublicationDateFutureValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -420,7 +424,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetPublicationDateNullValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -458,7 +462,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetPriceMinValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -496,7 +500,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetPriceNullValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria e autor
         UUID getCategoryId = createCategory(spec, token);
@@ -534,7 +538,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetAutorIdNullValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria
         UUID getCategoryId = createCategory(spec, token);
@@ -571,7 +575,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetAutorIdInexistenteValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar categoria
         UUID getCategoryId = createCategory(spec, token);
@@ -594,7 +598,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetCategoryIdNullValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar autor
         UUID getAutorId = createAutor(spec, token);
@@ -631,7 +635,7 @@ public class LivroCreateControllerTest {
     @Test
     void testgetCategoryIdInexistenteValidation(RequestSpecification spec) {
         // Obter token
-        String token = new AutenticationUtils(spec).getToken();
+        String token = autenticationUtils.getToken();
 
         // Criar autor
         UUID getAutorId = createAutor(spec, token);
