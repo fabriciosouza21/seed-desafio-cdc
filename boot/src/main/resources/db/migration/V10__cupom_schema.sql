@@ -1,0 +1,9 @@
+CREATE TABLE cupom(
+    id BIGSERIAL PRIMARY KEY NOT NULL,
+    uuid UUID NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    codigo VARCHAR(50) NOT NULL,
+    desconto DECIMAL(10,2) NOT NULL,
+    validade TIMESTAMP NOT NULL
+
+);

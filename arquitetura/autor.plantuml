@@ -85,7 +85,18 @@ carrinho *-- ItemCarrinho
 
 ItemCarrinho *-- Livro
 
+class Cupom {
+	-int id
+	-string uuid
+	-LocalDateTime createdAt
+	-string codigo
+	-double desconto
+	-LocalDateTime validade
+}
 
 
+class PagementoCupom {
+
+}
 
 @enduml
