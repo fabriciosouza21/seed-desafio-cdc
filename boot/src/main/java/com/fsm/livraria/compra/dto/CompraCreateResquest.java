@@ -202,7 +202,7 @@ public class CompraCreateResquest {
 
         Cupom cupom  = cupomRepository.findByCodigo(cupomCodigo)
                 .orElseThrow(() -> new ServiceError("Cupom não encontrado "));
-        if(cupom.isValido()){
+        if(!cupom.hasValido()){
             throw new ServiceError("O cupom está fora da validade");
         }
 

@@ -1,9 +1,9 @@
 package com.fsm.livraria.compra.controller;
 
 import com.fsm.exceptions.exception.FieldMessage;
+import com.fsm.exceptions.exception.ServiceError;
 import com.fsm.exceptions.exception.ValidateError;
 import com.fsm.livraria.compra.dto.CompraCreateResquest;
-import com.fsm.livraria.compra.entities.Compra;
 import com.fsm.livraria.cupom.entities.Cupom;
 import com.fsm.livraria.cupom.repositories.CupomRepository;
 import com.fsm.livraria.estado.entities.Estado;
@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @MicronautTest
@@ -287,14 +288,20 @@ public class CompraCriacaoControllerTest {
     @Test
     void testErrorCupomValidação(EstadoUtils estadoUtils, CupomUtils cupomUtils, EstadoRepository estadoRepository, PaisRepository paisRepository, CupomRepository cupomRepository) {
         CompraCreateResquest compraCreateResquest = getCompraCreateResquest(estadoUtils, cupomUtils);
-        Cupom cupom = cupomUtils.getCupom();
+        Cupom cupom = cupomUtils.getCupom(false);
 
         cupom.setValidade(LocalDateTime.now().minusMonths(14));
 
-       cupomRepository.save(cupom);
-        Compra compra = compraCreateResquest.toEntity(estadoRepository,paisRepository, cupomRepository);
+        cupomRepository.save(cupom);
 
+        //deve lançar a exceção de cupom expirado
+        // Act & Assert (execução e verificação)
+        Exception exception = assertThrows(ServiceError.class, () -> {
+            compraCreateResquest.toEntity(estadoRepository, paisRepository, cupomRepository);
+        });
 
+        // Opcionalmente, você pode verificar a mensagem da exceção
+        assertTrue(exception.getMessage().contains("O cupom está fora da validade"));
 
     }
 

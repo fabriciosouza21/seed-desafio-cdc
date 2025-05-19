@@ -31,12 +31,10 @@ public class CupomUtils {
         this.autenticationUtils = autenticationUtils;
     }
 
-    public Cupom getCupom(){
-        if (cupom != null) {
+    public Cupom getCupom(boolean cache) {
+        if (cupom != null && cache) {
             return cupom;
         }
-
-
 
             String token = autenticationUtils.getToken();
             String codigo = "codigo-" + System.currentTimeMillis();
@@ -60,6 +58,10 @@ public class CupomUtils {
 
         return this.cupom;
 
+    }
+
+    public Cupom getCupom() {
+        return getCupom(true);
     }
 
     private UUID extrairId(Response response) {
