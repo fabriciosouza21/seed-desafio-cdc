@@ -2,6 +2,7 @@ package com.fsm.livraria.compra.entities;
 
 import com.fsm.base.model.BaseDomain;
 import com.fsm.exceptions.exception.ServiceError;
+import com.fsm.livraria.carrinho.entities.Carrinho;
 import com.fsm.livraria.carrinho.repositories.CarrinhoRepository;
 import com.fsm.livraria.compra.validation.documento.CpfOrCnpj;
 import com.fsm.livraria.cupom.entities.Cupom;
@@ -12,9 +13,6 @@ import io.micronaut.data.annotation.Relation;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @MappedEntity
 public class Compra extends BaseDomain {
@@ -56,12 +54,11 @@ public class Compra extends BaseDomain {
     @Relation(Relation.Kind.MANY_TO_ONE)
     private Pais pais;
 
-    @Relation(Relation.Kind.ONE_TO_MANY)
-    private List<CompraPedido> compraPedido = new ArrayList<>();
-
     @Relation(Relation.Kind.EMBEDDED)
     private CupomAplicado cupomAplicado;
 
+    @Relation(Relation.Kind.MANY_TO_ONE)
+    private Carrinho carrinho;
 
     public Compra(String email, String nome, String sobrenome, String documento, String endereco, String complemento, String cidade, String telefone, String cep, Estado estado, Pais pais) {
 
@@ -220,12 +217,8 @@ public class Compra extends BaseDomain {
 
     }
 
-    public List<CompraPedido> getCompraPedido() {
-        return compraPedido;
-    }
-
-    public void setCompraPedido(List<CompraPedido> compraPedido) {
-        this.compraPedido = compraPedido;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
     public void AtribuirCupom(Cupom cupom) {
@@ -238,5 +231,13 @@ public class Compra extends BaseDomain {
 
     public void setCupomAplicado(CupomAplicado cupomAplicado) {
         this.cupomAplicado = cupomAplicado;
+    }
+
+    public Carrinho getCarrinho() {
+        return carrinho;
+    }
+
+    public void setCarrinho(Carrinho carrinho) {
+        this.carrinho = carrinho;
     }
 }

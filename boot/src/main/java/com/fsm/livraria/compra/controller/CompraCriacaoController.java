@@ -3,8 +3,6 @@ package com.fsm.livraria.compra.controller;
 import com.fsm.livraria.carrinho.repositories.CarrinhoRepository;
 import com.fsm.livraria.compra.dto.CompraCreateResquest;
 import com.fsm.livraria.compra.entities.Compra;
-import com.fsm.livraria.compra.entities.CompraPedido;
-import com.fsm.livraria.compra.repositories.CompraPedidoRepository;
 import com.fsm.livraria.compra.repositories.CompraRepository;
 import com.fsm.livraria.cupom.repositories.CupomRepository;
 import com.fsm.livraria.estado.repositories.EstadoRepository;
@@ -33,25 +31,20 @@ public class CompraCriacaoController {
 
     private final CarrinhoRepository carrinhoRepository;
 
-    private final CompraPedidoRepository compraPedidoRepository;
-
-    public CompraCriacaoController(PaisRepository paisRepository, CupomRepository cupomRepository, CompraRepository compraRepository, EstadoRepository estadoRepository, CarrinhoRepository carrinhoRepository, CompraPedidoRepository compraPedidoRepository) {
+    public CompraCriacaoController(PaisRepository paisRepository, CupomRepository cupomRepository, CompraRepository compraRepository, EstadoRepository estadoRepository, CarrinhoRepository carrinhoRepository) {
         this.paisRepository = paisRepository;
         this.cupomRepository = cupomRepository;
         this.compraRepository = compraRepository;
         this.estadoRepository = estadoRepository;
         this.carrinhoRepository = carrinhoRepository;
-        this.compraPedidoRepository = compraPedidoRepository;
     }
 
     @Post
     HttpResponse<Void> create(@Body @Valid CompraCreateResquest compraCriacaoRequest) {
         Compra compraNew = compraCriacaoRequest.toEntity(estadoRepository,paisRepository, cupomRepository);
         Compra compraSaved = compraRepository.save(compraNew);
-
-        CompraPedido compraPedidoNew = compraCriacaoRequest.toCompraPedido(carrinhoRepository, compraSaved);
-        compraPedidoRepository.save(compraPedidoNew);
-
+        compraCriacaoRequest.atribuirCarrinho(carrinhoRepository, compraSaved);
+        compraRepository.update(compraSaved);
         UriBuilder uri = UriBuilder.of(COMPRA_CRIACAO).path(compraSaved.getUuid().toString());
         return HttpResponse.created(uri.build());
     }

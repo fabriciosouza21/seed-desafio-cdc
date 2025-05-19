@@ -6,8 +6,6 @@ import com.fsm.exceptions.exception.ServiceError;
 import com.fsm.livraria.carrinho.entities.Carrinho;
 import com.fsm.livraria.carrinho.repositories.CarrinhoRepository;
 import com.fsm.livraria.compra.entities.Compra;
-import com.fsm.livraria.compra.entities.CompraPedido;
-import com.fsm.livraria.compra.entities.CompraPedidoId;
 import com.fsm.livraria.compra.validation.documento.CpfOrCnpj;
 import com.fsm.livraria.compra.validation.documento.EstadoPaisExist;
 import com.fsm.livraria.cupom.entities.Cupom;
@@ -217,11 +215,10 @@ public class CompraCreateResquest {
         this.carrinhoId = carrinhoId;
     }
 
-    public CompraPedido toCompraPedido(CarrinhoRepository carrinhoRepository, Compra compra) {
-        Carrinho carrinho = carrinhoRepository.findByUuid(UUID.fromString(this.carrinhoId))
+    public void atribuirCarrinho(CarrinhoRepository carrinhoRepository, Compra compra) {
+        Carrinho carrinho = carrinhoRepository.findByUuid(UUID.fromString(carrinhoId))
                 .orElseThrow(() -> new ServiceError("Carrinho não encontrado com o ID fornecido"));
-
-        return new CompraPedido(new CompraPedidoId(compra,carrinho ));
+        compra.setCarrinho(carrinho);
     }
 
     public void setCupomCodigo(String cupomCodigo) {
