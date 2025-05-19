@@ -4,6 +4,7 @@ import com.fsm.base.model.BaseDomain;
 import com.fsm.exceptions.exception.ServiceError;
 import com.fsm.livraria.carrinho.repositories.CarrinhoRepository;
 import com.fsm.livraria.compra.validation.documento.CpfOrCnpj;
+import com.fsm.livraria.cupom.entities.Cupom;
 import com.fsm.livraria.estado.entities.Estado;
 import com.fsm.livraria.pais.entities.Pais;
 import io.micronaut.data.annotation.MappedEntity;
@@ -57,6 +58,9 @@ public class Compra extends BaseDomain {
 
     @Relation(Relation.Kind.ONE_TO_MANY)
     private List<CompraPedido> compraPedido = new ArrayList<>();
+
+    @Relation(Relation.Kind.EMBEDDED)
+    private CupomAplicado cupomAplicado;
 
 
     public Compra(String email, String nome, String sobrenome, String documento, String endereco, String complemento, String cidade, String telefone, String cep, Estado estado, Pais pais) {
@@ -115,7 +119,7 @@ public class Compra extends BaseDomain {
         this.cidade = cidade;
         this.telefone = telefone;
         this.cep = cep;
-        this.estado = estado;
+        setEstado(estado,pais);
         this.pais = pais;
 
     }
@@ -196,7 +200,11 @@ public class Compra extends BaseDomain {
         return estado;
     }
 
-    public void setEstado(Estado estado) {
+    public void setEstado(Estado estado, Pais pais) {
+        if(!estado.hasMeuPais(pais)) {
+            throw  new ServiceError("O estado não pertence ao país");
+        }
+
         this.estado = estado;
     }
 
@@ -218,5 +226,17 @@ public class Compra extends BaseDomain {
 
     public void setCompraPedido(List<CompraPedido> compraPedido) {
         this.compraPedido = compraPedido;
+    }
+
+    public void AtribuirCupom(Cupom cupom) {
+        this.cupomAplicado = new CupomAplicado(cupom);
+    }
+
+    public CupomAplicado getCupomAplicado() {
+        return cupomAplicado;
+    }
+
+    public void setCupomAplicado(CupomAplicado cupomAplicado) {
+        this.cupomAplicado = cupomAplicado;
     }
 }

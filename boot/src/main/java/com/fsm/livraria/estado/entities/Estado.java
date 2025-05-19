@@ -69,4 +69,12 @@ public class Estado extends BaseDomain {
     public void setPais(Pais pais) {
         this.pais = pais;
     }
+
+    public boolean hasMeuPais(Pais pais) {
+        if (pais == null) {
+            return false;
+        }
+
+        return this.pais.getId().equals(pais.getId());
+    }
 }

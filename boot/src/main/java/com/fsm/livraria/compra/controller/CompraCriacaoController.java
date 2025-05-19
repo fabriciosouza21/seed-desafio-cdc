@@ -6,7 +6,9 @@ import com.fsm.livraria.compra.entities.Compra;
 import com.fsm.livraria.compra.entities.CompraPedido;
 import com.fsm.livraria.compra.repositories.CompraPedidoRepository;
 import com.fsm.livraria.compra.repositories.CompraRepository;
+import com.fsm.livraria.cupom.repositories.CupomRepository;
 import com.fsm.livraria.estado.repositories.EstadoRepository;
+import com.fsm.livraria.pais.repositories.PaisRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -21,6 +23,10 @@ public class CompraCriacaoController {
 
     public static final String COMPRA_CRIACAO = "/api/v1/compras";
 
+    private final PaisRepository paisRepository;
+
+    private final CupomRepository cupomRepository;
+
     private final CompraRepository compraRepository;
 
     private final EstadoRepository estadoRepository;
@@ -29,7 +35,9 @@ public class CompraCriacaoController {
 
     private final CompraPedidoRepository compraPedidoRepository;
 
-    public CompraCriacaoController(CompraRepository compraRepository, EstadoRepository estadoRepository, CarrinhoRepository carrinhoRepository, CompraPedidoRepository compraPedidoRepository) {
+    public CompraCriacaoController(PaisRepository paisRepository, CupomRepository cupomRepository, CompraRepository compraRepository, EstadoRepository estadoRepository, CarrinhoRepository carrinhoRepository, CompraPedidoRepository compraPedidoRepository) {
+        this.paisRepository = paisRepository;
+        this.cupomRepository = cupomRepository;
         this.compraRepository = compraRepository;
         this.estadoRepository = estadoRepository;
         this.carrinhoRepository = carrinhoRepository;
@@ -38,7 +46,7 @@ public class CompraCriacaoController {
 
     @Post
     HttpResponse<Void> create(@Body @Valid CompraCreateResquest compraCriacaoRequest) {
-        Compra compraNew = compraCriacaoRequest.toEntity(estadoRepository);
+        Compra compraNew = compraCriacaoRequest.toEntity(estadoRepository,paisRepository, cupomRepository);
         Compra compraSaved = compraRepository.save(compraNew);
 
         CompraPedido compraPedidoNew = compraCriacaoRequest.toCompraPedido(carrinhoRepository, compraSaved);

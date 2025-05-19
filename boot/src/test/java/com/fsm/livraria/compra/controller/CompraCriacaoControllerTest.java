@@ -1,10 +1,17 @@
 package com.fsm.livraria.compra.controller;
+
 import com.fsm.exceptions.exception.FieldMessage;
 import com.fsm.exceptions.exception.ValidateError;
 import com.fsm.livraria.compra.dto.CompraCreateResquest;
+import com.fsm.livraria.compra.entities.Compra;
+import com.fsm.livraria.cupom.entities.Cupom;
+import com.fsm.livraria.cupom.repositories.CupomRepository;
 import com.fsm.livraria.estado.entities.Estado;
+import com.fsm.livraria.estado.repositories.EstadoRepository;
+import com.fsm.livraria.pais.repositories.PaisRepository;
 import com.fsm.utils.AutenticationUtils;
 import com.fsm.utils.CarrinhoUtils;
+import com.fsm.utils.CupomUtils;
 import com.fsm.utils.EstadoUtils;
 import com.fsm.utils.PaisUtils;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -14,6 +21,7 @@ import jakarta.inject.Inject;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,7 +58,7 @@ public class CompraCriacaoControllerTest {
 
         CompraCreateResquest compraRequest = criarCompraRequest(
                 email, nome, sobrenome, documento, endereco, complemento,
-                cidade, telefone, cep, estado.getUuid().toString(), estado.getPais().getUuid().toString(),carrinhoUtils.getCarrinho().toString()
+                cidade, telefone, cep, estado.getUuid().toString(), estado.getPais().getUuid().toString(), carrinhoUtils.getCarrinho().toString()
         );
 
         // Testa a criação de compra com sucesso
@@ -62,6 +70,58 @@ public class CompraCriacaoControllerTest {
                 .post(CompraCriacaoController.COMPRA_CRIACAO)
                 .then()
                 .statusCode(201);
+    }
+
+    @Test
+    void compraCriacaoComCupomTest(RequestSpecification spec, EstadoUtils estadoUtils, CupomUtils cupomUtils) {
+        String token = autenticationUtils.getToken();
+
+        CompraCreateResquest compraRequest = getCompraCreateResquest(estadoUtils, cupomUtils);
+
+        // Testa a criação de compra com sucesso
+        spec.given()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(compraRequest)
+                .when()
+                .post(CompraCriacaoController.COMPRA_CRIACAO)
+                .then()
+                .statusCode(201);
+    }
+
+    private CompraCreateResquest getCompraCreateResquest(EstadoUtils estadoUtils, CupomUtils cupomUtils) {
+        // Obtém um estado existente com seu país associado
+        Estado estado = estadoUtils.getEstado();
+
+        // Dados da compra
+        String email = "email" + System.currentTimeMillis() + "@teste.com";
+        String nome = "Nome" + System.currentTimeMillis();
+        String sobrenome = "Sobrenome" + System.currentTimeMillis();
+        String documento = "12345678909"; // CPF válido
+        String endereco = "Rua Teste, 123";
+        String complemento = "Apto 101";
+        String cidade = "Cidade Teste";
+        String telefone = "(11) 98765-4321";
+        String cep = "12345-678";
+
+        Cupom cupom = cupomUtils.getCupom();
+
+        CompraCreateResquest compraRequest = criarCompraRequest(
+                email,
+                nome,
+                sobrenome,
+                documento,
+                endereco,
+                complemento,
+                cidade,
+                telefone,
+                cep,
+                estado.getUuid().toString(),
+                estado.getPais().getUuid().toString(),
+                carrinhoUtils.getCarrinho().toString(),
+                cupom.getCodigo()
+        );
+        return compraRequest;
     }
 
     @Test
@@ -224,11 +284,25 @@ public class CompraCriacaoControllerTest {
                 "O estado enviado não pertence ao país informado");
     }
 
+    @Test
+    void testErrorCupomValidação(EstadoUtils estadoUtils, CupomUtils cupomUtils, EstadoRepository estadoRepository, PaisRepository paisRepository, CupomRepository cupomRepository) {
+        CompraCreateResquest compraCreateResquest = getCompraCreateResquest(estadoUtils, cupomUtils);
+        Cupom cupom = cupomUtils.getCupom();
+
+        cupom.setValidade(LocalDateTime.now().minusMonths(14));
+
+       cupomRepository.save(cupom);
+        Compra compra = compraCreateResquest.toEntity(estadoRepository,paisRepository, cupomRepository);
+
+
+
+    }
+
     // Método auxiliar para criar uma instância de CompraCreateResquest
     private CompraCreateResquest criarCompraRequest(
             String email, String nome, String sobrenome, String documento,
             String endereco, String complemento, String cidade, String telefone,
-            String cep, String estadoId, String paisId, String carrinhoId) {
+            String cep, String estadoId, String paisId, String carrinhoId, String cupomCodigo) {
 
         CompraCreateResquest request = new CompraCreateResquest();
         request.setEmail(email);
@@ -243,7 +317,21 @@ public class CompraCriacaoControllerTest {
         request.setEstadoId(estadoId);
         request.setPaisId(paisId);
         request.setCarrinhoId(carrinhoId);
+        request.setCupomCodigo(cupomCodigo);
 
         return request;
+    }
+
+    // Método auxiliar para criar uma instância de CompraCreateResquest
+    private CompraCreateResquest criarCompraRequest(
+            String email, String nome, String sobrenome, String documento,
+            String endereco, String complemento, String cidade, String telefone,
+            String cep, String estadoId, String paisId, String carrinhoId) {
+
+        return this.criarCompraRequest(
+                email, nome, sobrenome, documento,
+                endereco, complemento, cidade, telefone,
+                cep, estadoId, paisId, carrinhoId, null
+        );
     }
 }

@@ -87,4 +87,8 @@ public class Cupom extends BaseDomain {
     public int hashCode() {
         return Objects.hash(super.hashCode(), codigo);
     }
+
+    public boolean isValido() {
+        return this.validade.isAfter(LocalDateTime.now());
+    }
 }

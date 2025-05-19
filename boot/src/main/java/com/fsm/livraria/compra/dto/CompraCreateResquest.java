@@ -10,9 +10,13 @@ import com.fsm.livraria.compra.entities.CompraPedido;
 import com.fsm.livraria.compra.entities.CompraPedidoId;
 import com.fsm.livraria.compra.validation.documento.CpfOrCnpj;
 import com.fsm.livraria.compra.validation.documento.EstadoPaisExist;
+import com.fsm.livraria.cupom.entities.Cupom;
+import com.fsm.livraria.cupom.repositories.CupomRepository;
 import com.fsm.livraria.estado.entities.Estado;
 import com.fsm.livraria.estado.repositories.EstadoRepository;
 import com.fsm.livraria.estado.validation.EstadoExist;
+import com.fsm.livraria.pais.entities.Pais;
+import com.fsm.livraria.pais.repositories.PaisRepository;
 import com.fsm.livraria.pais.validation.PaisExist;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.GroupSequence;
@@ -72,6 +76,9 @@ public class CompraCreateResquest {
 
     @NotBlank(message = "O carrinho não pode ser vazio", groups = AtributosBasicos.class)
     private String carrinhoId;
+
+    private String cupomCodigo;
+
 
 
     public String getEmail() {
@@ -162,11 +169,14 @@ public class CompraCreateResquest {
         this.paisId = paisId;
     }
 
-    public Compra toEntity(EstadoRepository estadoRepository) {
+    public Compra toEntity(EstadoRepository estadoRepository, PaisRepository paisRepository, CupomRepository cupomRepository) {
 
         Estado estado = estadoRepository.findByUuid(UUID.fromString(estadoId)).orElseThrow(() -> new ServiceError("Estado não encontrado com o ID fornecido"));
 
-        return new Compra(
+        Pais pais = paisRepository.findByUuid(UUID.fromString(paisId)).orElseThrow(() -> new ServiceError("País não encontrado com o ID fornecido"));
+
+
+        Compra compra = new Compra(
                 this.email,
                 this.nome,
                 this.sobrenome,
@@ -177,8 +187,26 @@ public class CompraCreateResquest {
                 this.telefone,
                 this.cep,
                 estado,
-                estado.getPais()
+                pais
+
         );
+
+        if(cupomCodigo != null && !cupomCodigo.isBlank()){
+            validarCupom(cupomRepository, compra);
+        }
+
+        return compra;
+    }
+
+    private void validarCupom(CupomRepository cupomRepository, Compra compra) {
+
+        Cupom cupom  = cupomRepository.findByCodigo(cupomCodigo)
+                .orElseThrow(() -> new ServiceError("Cupom não encontrado "));
+        if(cupom.isValido()){
+            throw new ServiceError("O cupom está fora da validade");
+        }
+
+        compra.AtribuirCupom(cupom);
     }
 
     public String getCarrinhoId() {
@@ -194,5 +222,13 @@ public class CompraCreateResquest {
                 .orElseThrow(() -> new ServiceError("Carrinho não encontrado com o ID fornecido"));
 
         return new CompraPedido(new CompraPedidoId(compra,carrinho ));
+    }
+
+    public void setCupomCodigo(String cupomCodigo) {
+        this.cupomCodigo = cupomCodigo;
+    }
+
+    public String getCupomCodigo() {
+        return cupomCodigo;
     }
 }
