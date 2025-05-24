@@ -2,6 +2,7 @@ package com.fsm.livraria.cupom.controller;
 
 import com.fsm.livraria.cupom.dto.CupomCreateRequest;
 import com.fsm.livraria.cupom.entities.Cupom;
+import com.fsm.livraria.cupom.message.produces.CupomProducerCupomClient;
 import com.fsm.livraria.cupom.repositories.CupomRepository;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -26,8 +27,13 @@ public class CupomController {
 
     private final CupomRepository cupomRepository;
 
-    public CupomController(CupomRepository cupomRepository) {
+    private final CupomProducerCupomClient cupomProducerCupomClient;
+
+    public CupomController(
+            CupomRepository cupomRepository,
+            CupomProducerCupomClient cupomProducerCupomClient) {
         this.cupomRepository = cupomRepository;
+        this.cupomProducerCupomClient = cupomProducerCupomClient;
     }
 
     @Post
@@ -39,6 +45,8 @@ public class CupomController {
         Cupom cupomSaved = cupomRepository.save(cupom);
 
         LOG.info("Cupom criado com sucesso: {}", cupomSaved.getCodigo());
+
+        cupomProducerCupomClient.sendCupom(cupom).subscribe();
 
         URI uri = UriBuilder.of(CUPOM_CREATE).path(cupomSaved.getUuid().toString()).build();
 

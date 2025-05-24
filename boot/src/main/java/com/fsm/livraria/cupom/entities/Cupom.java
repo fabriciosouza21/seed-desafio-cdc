@@ -3,6 +3,7 @@ package com.fsm.livraria.cupom.entities;
 import com.fsm.base.model.BaseDomain;
 import com.fsm.exceptions.exception.ServiceError;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @MappedEntity
+@Serdeable
 public class Cupom extends BaseDomain {
 
     @NotBlank
