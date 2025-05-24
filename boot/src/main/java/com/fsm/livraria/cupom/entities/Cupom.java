@@ -93,4 +93,13 @@ public class Cupom extends BaseDomain {
     public boolean hasValido() {
         return validade.isAfter(LocalDateTime.now());
     }
+
+    @Override
+    public String toString() {
+        return "Cupom{" +
+                "codigo='" + codigo + '\'' +
+                ", desconto=" + desconto +
+                ", validade=" + validade +
+                '}';
+    }
 }

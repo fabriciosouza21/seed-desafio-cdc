@@ -9,4 +9,7 @@ import reactor.core.publisher.Mono;
 public interface CupomProducerCupomClient {
     @Topic("livraria-cupom")
     Mono<Cupom> sendCupom(Cupom cupom);
+
+    @Topic("livraria-cupom-deadletter")
+    Mono<Cupom> sendCupomDeadLetter(Cupom cupom);
 }
